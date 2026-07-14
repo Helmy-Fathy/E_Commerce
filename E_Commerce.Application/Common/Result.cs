@@ -35,5 +35,8 @@
         public static Result<TValue> Ok(TValue value) => new Result<TValue>(value);
         public static Result<TValue> Fail(Error error) => new Result<TValue>(error);
         public static Result<TValue> Fail(IReadOnlyList<Error> errors) => new Result<TValue>(errors);
+
+        public static implicit operator Result<TValue>(TValue value) => Ok(value);
+        public static implicit operator Result<TValue>(Error error) => Fail(error);
     }
 }
