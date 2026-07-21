@@ -7,9 +7,8 @@ using System.Threading.Tasks;
 
 namespace E_Commerce.API.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class ProductsController : ControllerBase
+
+    public class ProductsController : ApiBaseController
     {
         private readonly IProductService _productService;
 
@@ -19,29 +18,31 @@ namespace E_Commerce.API.Controllers
         }
         //Get All Products
         [HttpGet]
-        public async Task<ActionResult<Result<IReadOnlyList<ProductDto>>>> GetAllProducts(CancellationToken ct)
+        public async Task<ActionResult<IReadOnlyList<ProductDto>>> GetAllProducts(CancellationToken ct)
         {
             var result = await _productService.GetAllProductsAsync(ct);
-            return Ok(result);
+            return ToActionResult(result);
         }
         //Get Product By Id
         [HttpGet("{id}")]
-        public async Task<ActionResult<Result<ProductDto>>> GetProduct(int id, CancellationToken ct)
+        [ProducesResponseType(typeof(ProductDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<ProductDto>> GetProduct(int id, CancellationToken ct)
         {
             var result = await _productService.GetProductByIdAsync(id, ct);
-            return Ok(result);
+            return ToActionResult(result);
         }
         //Get All Types 
         [HttpGet("types")]
-        public async Task<ActionResult<Result<IReadOnlyList<TypeDto>>>> GetAllTypes(CancellationToken ct)
+        public async Task<ActionResult<IReadOnlyList<TypeDto>>> GetAllTypes(CancellationToken ct)
         {
-            return Ok(await _productService.GetAllTypesAsync(ct));
+            return ToActionResult(await _productService.GetAllTypesAsync(ct));
         }
         //Get All Brands
         [HttpGet("brands")]
-        public async Task<ActionResult<Result<IReadOnlyList<BrandDto>>>> GetAllBrands(CancellationToken ct)
+        public async Task<ActionResult<IReadOnlyList<BrandDto>>> GetAllBrands(CancellationToken ct)
         {
-            return Ok(await _productService.GetAllBrandsAsync(ct));
+            return ToActionResult(await _productService.GetAllBrandsAsync(ct));
         }
     }
 }

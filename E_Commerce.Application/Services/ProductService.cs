@@ -40,7 +40,7 @@ namespace E_Commerce.Application.Services
         {
             var product = await _unitOfWork.GetRepository<Product, int>().GetByIdAsync(id, ct);
             if (product == null)
-                return Error.NotFound("Product.NotFoun", $"Product With Id {id} Is Not Found");
+                return Error.NotFound("Product.NotFound", $"Product With Id {id} Is Not Found");
 
             return _mapper.Map<ProductDto>(product);
         }
