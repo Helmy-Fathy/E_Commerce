@@ -16,6 +16,7 @@ namespace E_Commerce.API.Controllers
         {
             _productService = productService;
         }
+
         //Get All Products
         [HttpGet]
         public async Task<ActionResult<IReadOnlyList<ProductDto>>> GetAllProducts(CancellationToken ct)
@@ -23,6 +24,7 @@ namespace E_Commerce.API.Controllers
             var result = await _productService.GetAllProductsAsync(ct);
             return ToActionResult(result);
         }
+
         //Get Product By Id
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(ProductDto), StatusCodes.Status200OK)]
@@ -32,6 +34,7 @@ namespace E_Commerce.API.Controllers
             var result = await _productService.GetProductByIdAsync(id, ct);
             return ToActionResult(result);
         }
+
         //Get All Types 
         [HttpGet("types")]
         public async Task<ActionResult<IReadOnlyList<TypeDto>>> GetAllTypes(CancellationToken ct)
