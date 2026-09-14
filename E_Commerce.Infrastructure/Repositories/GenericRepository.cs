@@ -33,8 +33,13 @@ namespace E_Commerce.Infrastructure.Repositories
 
         public async Task<TEntity?> GetByIdAsync(ISpecifications<TEntity, Tkey> spec, CancellationToken ct = default)
         {
-            var query = SpecificationEvaluator.CreateQuery(dbContext.Set<TEntity>(), spec); 
+            var query = SpecificationEvaluator.CreateQuery(dbContext.Set<TEntity>(), spec);
             return await query.FirstOrDefaultAsync(ct);
+        }
+
+        public async Task<int> CountAsync(ISpecifications<TEntity, Tkey> spec, CancellationToken ct = default)
+        {
+            return await SpecificationEvaluator.CreateQuery(dbContext.Set<TEntity>(), spec).CountAsync(ct);
         }
     }
 }
