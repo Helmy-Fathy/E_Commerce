@@ -24,7 +24,7 @@ namespace E_Commerce.Infrastructure.Repositories
             return result ? basket : null;
         }
 
-        public async Task<bool> DeleteBasket(string basketId, CancellationToken ct = default)
+        public async Task<bool> DeleteBasketAsync(string basketId, CancellationToken ct = default)
         {
             return await _database.KeyDeleteAsync(basketId);
         }
