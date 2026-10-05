@@ -9,7 +9,7 @@ namespace E_Commerce.Application.DTOs.Baskets
 
         [Required(ErrorMessage = "Product Name Is Required")]
         public string ProductName { get; set; } = default!;
-        public string ProductUrl { get; set; } = default!;
+        public string PictureUrl { get; set; } = default!;
 
         [Range(1, double.MaxValue)]
         public decimal Price { get; set; }
