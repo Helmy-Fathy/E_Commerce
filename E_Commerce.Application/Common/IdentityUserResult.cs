@@ -8,7 +8,7 @@ namespace E_Commerce.Application.Common
 {
     public class IdentityUserResult
     {
-        public IdentityUserResult(string id, string displayName, string email, string userName)
+        public IdentityUserResult(string id, string displayName, string? email, string? userName)
         {
             Id = id;
             DisplayName = displayName;
@@ -18,7 +18,7 @@ namespace E_Commerce.Application.Common
 
         public string Id { get; set; } = default!;
         public string DisplayName { get; set; } = default!;
-        public string Email { get; set; } = default!;
-        public string UserName { get; set; } = default!;
+        public string? Email { get; set; } 
+        public string? UserName { get; set; } 
     }
 }

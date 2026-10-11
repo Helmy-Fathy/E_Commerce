@@ -23,5 +23,13 @@ namespace E_Commerce.API.Controllers
         {
             return ToActionResult(await _authenticationService.LoginAsync(loginDto, ct));
         }
+
+        [HttpPost("Register")]
+        [ProducesResponseType(typeof(UserDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status409Conflict)]
+        public async Task<ActionResult<UserDto>> Register(RegisterDto registerDto, CancellationToken ct)
+        {
+            return ToActionResult(await _authenticationService.RegisterAsync(registerDto, ct));
+        }
     }
 }

@@ -25,7 +25,7 @@ namespace E_Commerce.Application.Services
 
             var passwordResult = await _identityService.CheckPasswordAsync(loginDto.Email, loginDto.Password, ct);
             if (!passwordResult.IsSuccess)
-                return Result<UserDto>.Fail(userResult.Errors);
+                return Result<UserDto>.Fail(passwordResult.Errors);
             if (!passwordResult.data)
                 return Result<UserDto>.Fail(Error.Unauthorized("Invalid Email Or Password"));
 
@@ -36,6 +36,23 @@ namespace E_Commerce.Application.Services
                 Token = "Token"
             };
 
+        }
+
+        public async Task<Result<UserDto>> RegisterAsync(RegisterDto registerDto, CancellationToken ct = default)
+        {
+            var userResult = await _identityService.CreateUserAsync(registerDto, ct);
+            if (!userResult.IsSuccess)
+            {
+                return Result<UserDto>.Fail(userResult.Errors);
+            }
+
+            var user = userResult.data;
+            return Result<UserDto>.Ok(new UserDto()
+            {
+                Email = user.Email,
+                DisplayName = user.DisplayName,
+                Token = "Token"
+            });
         }
     }
 }

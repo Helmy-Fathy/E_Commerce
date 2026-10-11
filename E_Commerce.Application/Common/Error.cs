@@ -2,7 +2,7 @@
 
 namespace E_Commerce.Application.Common
 {
-    public sealed record Error(string code, string description, ErrorType ErrorType)
+    public sealed record Error(string code, string description, ErrorType ErrorType = ErrorType.Failure)
     {
         public static Error Failure(string code = "General.Failure", string description = "General Failure Has Occured")
             => new(code, description, ErrorType.Failure);
