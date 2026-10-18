@@ -44,8 +44,22 @@ namespace E_Commerce.API.Controllers
         [HttpGet("currentUser")]
         public async Task<ActionResult<UserDto>> GetCurrentUser(CancellationToken ct)
         {
-            var email = User.FindFirstValue(ClaimTypes.Email) ?? throw new UnauthorizedAccessException("No Email Claim Found");
+            var email = GetEmailFromToken();
             return ToActionResult(await _authenticationService.GetCurrentUserAsync(email, ct));
+        }
+
+        [Authorize]
+        [HttpGet("address")]
+        public async Task<ActionResult<AddressDto>> GetCurrentUserAddress(CancellationToken ct)
+        {
+            return ToActionResult(await _authenticationService.GetUserAddressAsync(GetEmailFromToken(), ct));
+        }
+
+        [Authorize]
+        [HttpPut("address")]
+        public async Task<ActionResult<AddressDto>> UpSertUserAddress(AddressDto addressDto, CancellationToken ct)
+        {
+            return ToActionResult(await _authenticationService.UpSertUserAddressAsync(GetEmailFromToken(), addressDto, ct)); 
         }
     }
 }

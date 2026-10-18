@@ -3,6 +3,7 @@ using E_Commerce.Application.Contracts;
 using E_Commerce.Application.DTOs.Identity;
 using E_Commerce.Infrastructure.Identity.Entities;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -89,7 +90,55 @@ namespace E_Commerce.Infrastructure.Identity.Services
 
         public async Task<Result<bool>> CheckEmailExistsAsync(string email, CancellationToken ct = default)
         {
-            return await _userManager.FindByEmailAsync(email) is not null; 
+            return await _userManager.FindByEmailAsync(email) is not null;
+        }
+
+        public async Task<Result<AddressDto>> GetUserAddressByEmailAsync(string email, CancellationToken ct = default)
+        {
+            var user = await _userManager.Users.Include(x => x.Address).FirstOrDefaultAsync(x => x.Email == email, ct);
+            if (user?.Address == null)
+                return Result<AddressDto>.Fail(Error.NotFound("Address Not Found", $"Address Of User With Email {email} Is Not Found"));
+
+            var address = user.Address;
+            return new AddressDto()
+            {
+                FirstName = address.FirstName,
+                LastName = address.LastName,
+                Country = address.Country,
+                City = address.City,
+                Street = address.Street
+            };
+        }
+
+        public async Task<Result<AddressDto>> UpdateOrInsertUserAddressAsync(string email, AddressDto addressDto, CancellationToken ct = default)
+        {
+            var user = await _userManager.Users.Include(x => x.Address).FirstOrDefaultAsync(x => x.Email == email, ct);
+
+            if (user?.Address == null)
+            {
+                user.Address = new Address()
+                {
+                    FirstName = addressDto.FirstName,
+                    LastName = addressDto.LastName,
+                    Country = addressDto.Country,
+                    City = addressDto.City,
+                    Street = addressDto.Street
+                };
+            }
+            else
+            {
+                user.Address.FirstName = addressDto.FirstName;
+                user.Address.LastName = addressDto.LastName;
+                user.Address.Country = addressDto.Country;
+                user.Address.City = addressDto.City;
+                user.Address.Street = addressDto.Street;
+            }
+
+            var result = await _userManager.UpdateAsync(user);
+            if (result.Succeeded)
+                return addressDto;
+            else
+                return Error.Failure("Failure", string.Join(";", result.Errors.Select(e => e.Description)));
         }
     }
 }
